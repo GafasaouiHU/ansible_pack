@@ -1,0 +1,24 @@
+- name: Install_mysql
+  shell: sudo apt install mysql-server mysql-client -y
+  become: yes
+
+- name: Start the MySQL service
+  service: 
+    name: mysql 
+    state: started
+    enabled: true
+
+- name: Set_root_password
+  mysql_user:
+    user: root
+    password: root
+    host: localhost
+
+
+- name: delete_uknown_user
+  mysql_user:
+    login_user: root
+    login_password: root
+    user: ""
+    host_all: yes
+    state: absent
