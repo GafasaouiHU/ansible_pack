@@ -1,0 +1,17 @@
+- name: check Apache2
+  shell: dpkg-query -W -f='${Status}' apache2 | grep 'install ok installed'
+  register: is_installed
+  failed_when: no
+  changed_when: no
+
+- name: installing apache2
+  apt:
+    name: "apache2"
+    state: present
+    update_cache: yes
+  become: yes
+  when: is_installed.rc == -1 and webserver == "a"
+
+- name: include MYSQL 
+  include_tasks: "{{ansible_pack}}/mysql/playbook.yml"
+  when: dbtype == "m"
